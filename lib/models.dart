@@ -60,6 +60,7 @@ class Feed {
   final int entryId;
   final String field1;
   final String field2;
+  final String field3;
   final String field4;
   final String field5;
   final String field6;
@@ -71,6 +72,7 @@ class Feed {
     this.entryId,
     this.field1,
     this.field2,
+    this.field3,
     this.field4,
     this.field5,
     this.field6,
@@ -84,6 +86,7 @@ class Feed {
       entryId: parsedJson['entry_id'],
       field1: parsedJson['field1'] ?? "",
       field2: parsedJson['field2'] ?? "",
+      field3: parsedJson['field3'] ?? "",
       field4: parsedJson['field4'] ?? "",
       field5: parsedJson['field5'] ?? "",
       field6: parsedJson['field6'] ?? "",

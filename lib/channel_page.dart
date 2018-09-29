@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokpak_thingspeak/enums/feed_fields.dart';
+import 'package:pokpak_thingspeak/feed_chart.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:pokpak_thingspeak/utils/parse_feed_series_list.dart';
 
 class ChannelPage extends StatelessWidget {
   final Channel channel;
@@ -38,56 +41,8 @@ class ChannelPage extends StatelessWidget {
             if (snapshot.hasData) {
               feeds = snapshot.data;
               
-              var f1Feeds = feeds.where((i) => i.field1 != "").toList();
-
-              var series = [
-                charts.Series<Feed, DateTime>(
-                  id: 'Clicks',
-                  domainFn: (Feed feed, _) => feed.createdAt,
-                  measureFn: (Feed feed, _) => int.tryParse(feed.field1.replaceAll("/\n", "").replaceAll("/\r", "").replaceAll("�", "")),
-                  data: f1Feeds,
-                ),
-                charts.Series<Feed, DateTime>(
-                  id: 'Clicks',
-                  domainFn: (Feed feed, _) => feed.createdAt,
-                  measureFn: (Feed feed, _) => int.tryParse(feed.field1.replaceAll("/\n", "").replaceAll("/\r", "").replaceAll("�", "")),
-                  data: f1Feeds,
-                )..setAttribute(charts.rendererIdKey, 'customPoint'),
-              ];
-
-              var chart = new charts.TimeSeriesChart(
-                series,
-                animate: false,
-                // Configure the default renderer as a line renderer. This will be used
-                // for any series that does not define a rendererIdKey.
-                //
-                // This is the default configuration, but is shown here for  illustration.
-                defaultRenderer: new charts.LineRendererConfig(),
-                // Custom renderer configuration for the point series.
-                customSeriesRenderers: [
-                  new charts.PointRendererConfig(
-                    // ID used to link series to this renderer.
-                      customRendererId: 'customPoint')
-                ],
-                // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-                // should create the same type of [DateTime] as the data provided. If none
-                // specified, the default creates local date time.
-                dateTimeFactory: const charts.LocalDateTimeFactory(),
-                  behaviors: [
-                    charts.RangeAnnotation([
-                      charts.RangeAnnotationSegment(
-                          feeds.first.createdAt,
-                          feeds.last.createdAt,
-                          charts.RangeAnnotationAxisType.domain
-                      ),
-                    ]),
-                  ],
-                  primaryMeasureAxis: charts.NumericAxisSpec(
-                    tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                        zeroBound: false
-                    )
-                  )
-              );
+              var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, FeedField.field1);
+              var chart = new FeedChart(seriesList);
 
               return Container(
                 margin: EdgeInsets.all(10.0),
