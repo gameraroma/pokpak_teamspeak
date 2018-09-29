@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pokpak_thingspeak/channel_page.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -79,6 +80,10 @@ class ChannelListItem extends StatelessWidget {
       tagsText += tag.name + ",";
     }
     tagsText.trimRight();
+
+    var formatter = new DateFormat('yyyy-MM-dd H:m');
+    String createAtFormat = formatter.format(channel.createdAt);
+
     return ListTile(
       onTap: () {
         Navigator.push(
@@ -90,7 +95,7 @@ class ChannelListItem extends StatelessWidget {
       },
       title: Text(channel.name),
       subtitle: Text(tagsText),
-      trailing: Text(channel.createdAt.toString()),
+      trailing: Text(createAtFormat),
     );
   }
 }
