@@ -13,11 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomePage(
-        title: 'Home Page',
-        channel: <Channel>[
-          Channel(name: 'Eggs'),
-          Channel(name: 'Flour'),
-          Channel(name: 'Chocolate chips'),
+        title: 'Home Page'
         ],
       ),
     );
