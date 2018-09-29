@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
@@ -13,15 +15,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final List<Channel> channels = [];
+  List<Channel> channels = [];
 
-  Future<String> fetchPost() async {
+  Future<ChannelList> fetchPost() async {
     final response =
     await http.get('https://api.thingspeak.com/channels.json?api_key=M667PF8VRIA1OR61');
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON
-      return response.body.toString();
+      var channelList = ChannelList.fromJson(json.decode(response.body));
+      return channelList;
     } else {
       // If that response was not OK, throw an error.
       throw Exception('Failed to load post');
@@ -35,10 +38,12 @@ class _HomePageState extends State<HomePage> {
             title: Text(widget.title)
         ),
         body: Center(
-        child: FutureBuilder<String>(
+        child: FutureBuilder<ChannelList>(
           future: fetchPost(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              ChannelList channelList = snapshot.data;
+              channels = channelList.channels;
               return ListView(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 children: channels.map((Channel channel) {
@@ -68,10 +73,15 @@ class ChannelListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var tagsText = "";
+    for (var tag in channel.tags) {
+      tagsText += tag.name + ",";
+    }
+    tagsText.trimRight();
     return ListTile(
       title: Text(channel.name),
-      subtitle: Text(channel.name),
-      trailing: Text(channel.name),
+      subtitle: Text(tagsText),
+      trailing: Text(channel.createdAt.toString()),
     );
   }
 }

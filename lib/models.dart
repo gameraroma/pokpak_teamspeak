@@ -2,13 +2,43 @@ class Channel {
   final int id;
   final String name;
   final String description;
-//  @SerializedName("created_at")
   final DateTime createdAt;
-//  @SerializedName("last_entry_id")
   final int lastEntryId;
   final List<Tag> tags;
 
-  Channel({this.id, this.name, this.description, this.createdAt, this.lastEntryId, this.tags});
+  Channel({
+    this.id,
+    this.name,
+    this.description,
+    this.createdAt,
+    this.lastEntryId,
+    this.tags
+  });
+
+  factory Channel.fromJson(Map<String, dynamic> json) {
+    return Channel(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      createdAt: DateTime.parse(json['created_at']),
+      lastEntryId: json['last_entry_id'],
+      tags: (json['tags'] as List).map((i) => Tag.fromJson(i)).toList(),
+    );
+  }
+}
+
+class ChannelList {
+  final List<Channel> channels;
+
+  ChannelList({
+    this.channels,
+  });
+
+  factory ChannelList.fromJson(List<dynamic> parsedJson) {
+    return ChannelList(
+      channels: parsedJson.map((i)=>Channel.fromJson(i)).toList(),
+    );
+  }
 }
 
 class Tag {
@@ -16,6 +46,13 @@ class Tag {
   final String name;
 
   Tag({this.id, this.name});
+
+  factory Tag.fromJson(Map<String, dynamic> parsedJson) {
+    return Tag(
+        id: parsedJson['id'],
+        name: parsedJson['name'],
+    );
+  }
 }
 
 class Feed {
