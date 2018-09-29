@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pokpak_thingspeak/channel_page.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
 
@@ -79,6 +80,14 @@ class ChannelListItem extends StatelessWidget {
     }
     tagsText.trimRight();
     return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChannelPage(
+              channel: channel,
+          )),
+        );
+      },
       title: Text(channel.name),
       subtitle: Text(tagsText),
       trailing: Text(channel.createdAt.toString()),
