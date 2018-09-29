@@ -82,13 +82,13 @@ class Feed {
     return Feed(
       createdAt: DateTime.parse(parsedJson['created_at']),
       entryId: parsedJson['entry_id'],
-      field1: parsedJson['field1'],
-      field2: parsedJson['field2'],
-      field4: parsedJson['field4'],
-      field5: parsedJson['field5'],
-      field6: parsedJson['field6'],
-      field7: parsedJson['field7'],
-      field8: parsedJson['field8'],
+      field1: parsedJson['field1'] ?? "",
+      field2: parsedJson['field2'] ?? "",
+      field4: parsedJson['field4'] ?? "",
+      field5: parsedJson['field5'] ?? "",
+      field6: parsedJson['field6'] ?? "",
+      field7: parsedJson['field7'] ?? "",
+      field8: parsedJson['field8'] ?? "",
     );
   }
 }

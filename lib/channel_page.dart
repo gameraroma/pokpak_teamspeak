@@ -13,7 +13,7 @@ class ChannelPage extends StatelessWidget {
 
   Future<List<Feed>> fetchFeeds() async {
     final response =
-    await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=C3BZNV7QADBY54J6&results=50');
+    await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=KJMMNNESPD923P4B&results=50');
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON
@@ -37,36 +37,63 @@ class ChannelPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               feeds = snapshot.data;
+              
+              var f1Feeds = feeds.where((i) => i.field1 != "").toList();
 
               var series = [
                 charts.Series<Feed, DateTime>(
                   id: 'Clicks',
                   domainFn: (Feed feed, _) => feed.createdAt,
-                  measureFn: (Feed feed, _) => int.tryParse(feed.field1),
-                  data: feeds,
+                  measureFn: (Feed feed, _) => int.tryParse(feed.field1.replaceAll("/\n", "").replaceAll("/\r", "").replaceAll("�", "")),
+                  data: f1Feeds,
                 ),
+                charts.Series<Feed, DateTime>(
+                  id: 'Clicks',
+                  domainFn: (Feed feed, _) => feed.createdAt,
+                  measureFn: (Feed feed, _) => int.tryParse(feed.field1.replaceAll("/\n", "").replaceAll("/\r", "").replaceAll("�", "")),
+                  data: f1Feeds,
+                )..setAttribute(charts.rendererIdKey, 'customPoint'),
               ];
 
-              var chart = charts.TimeSeriesChart(
+              var chart = new charts.TimeSeriesChart(
                 series,
-                animate: true,
-                behaviors: [
-                  charts.RangeAnnotation([
-                    charts.RangeAnnotationSegment(
-                      feeds.first.createdAt,
-                      feeds.last.createdAt,
-                      charts.RangeAnnotationAxisType.domain
-                    ),
-                    charts.RangeAnnotationSegment(
-                      1,
-                      -1,
-                      charts.RangeAnnotationAxisType.measure
-                    ),
-                  ]),
-                ]
+                animate: false,
+                // Configure the default renderer as a line renderer. This will be used
+                // for any series that does not define a rendererIdKey.
+                //
+                // This is the default configuration, but is shown here for  illustration.
+                defaultRenderer: new charts.LineRendererConfig(),
+                // Custom renderer configuration for the point series.
+                customSeriesRenderers: [
+                  new charts.PointRendererConfig(
+                    // ID used to link series to this renderer.
+                      customRendererId: 'customPoint')
+                ],
+                // Optionally pass in a [DateTimeFactory] used by the chart. The factory
+                // should create the same type of [DateTime] as the data provided. If none
+                // specified, the default creates local date time.
+                dateTimeFactory: const charts.LocalDateTimeFactory(),
+                  behaviors: [
+                    charts.RangeAnnotation([
+                      charts.RangeAnnotationSegment(
+                          feeds.first.createdAt,
+                          feeds.last.createdAt,
+                          charts.RangeAnnotationAxisType.domain
+                      ),
+                    ]),
+                  ],
+                  primaryMeasureAxis: charts.NumericAxisSpec(
+                    tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                        zeroBound: false
+                    )
+                  )
               );
 
-              return chart;
+              return Container(
+                margin: EdgeInsets.all(10.0),
+                height: 250.0,
+                child: chart,
+              );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
