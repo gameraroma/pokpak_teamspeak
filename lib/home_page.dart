@@ -36,10 +36,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: Text(widget.title)
-        ),
-        body: Center(
+      appBar: AppBar(
+          title: Text(widget.title)
+      ),
+      body: Center(
         child: FutureBuilder<ChannelList>(
           future: fetchChannels(),
           builder: (context, snapshot) {
