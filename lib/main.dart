@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       ),
       home: HomePage(
         title: 'Home Page',
-        products: <Channel>[
+        channel: <Channel>[
           Channel(name: 'Eggs'),
           Channel(name: 'Flour'),
           Channel(name: 'Chocolate chips'),
