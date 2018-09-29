@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Channel> channels = [];
 
-  Future<ChannelList> fetchPost() async {
+  Future<ChannelList> fetchChannels() async {
     final response =
     await http.get('https://api.thingspeak.com/channels.json?api_key=M667PF8VRIA1OR61');
 
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Center(
         child: FutureBuilder<ChannelList>(
-          future: fetchPost(),
+          future: fetchChannels(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               ChannelList channelList = snapshot.data;

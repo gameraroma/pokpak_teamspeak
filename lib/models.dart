@@ -66,5 +66,29 @@ class Feed {
   final String field7;
   final String field8;
 
-  Feed({this.createdAt, this.entryId, this.field1, this.field2, this.field4, this.field5, this.field6, this.field7, this.field8});
+  Feed({
+    this.createdAt,
+    this.entryId,
+    this.field1,
+    this.field2,
+    this.field4,
+    this.field5,
+    this.field6,
+    this.field7,
+    this.field8
+  });
+
+  factory Feed.fromJson(Map<String, dynamic> parsedJson) {
+    return Feed(
+      createdAt: DateTime.parse(parsedJson['created_at']),
+      entryId: parsedJson['entry_id'],
+      field1: parsedJson['field1'],
+      field2: parsedJson['field2'],
+      field4: parsedJson['field4'],
+      field5: parsedJson['field5'],
+      field6: parsedJson['field6'],
+      field7: parsedJson['field7'],
+      field8: parsedJson['field8'],
+    );
+  }
 }
