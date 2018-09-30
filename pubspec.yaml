@@ -23,6 +23,13 @@ dev_dependencies:
   http: 0.12.0
   intl: ^0.15.7
   charts_flutter: 0.4.0
+  flutter_launcher_icons: "^0.6.1"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/ic_pokpak_ts_icon.png"
+  adaptive_icon_background: "#FFFAFAFA"
 
 dependency_overrides:
   http: 0.11.3+17
