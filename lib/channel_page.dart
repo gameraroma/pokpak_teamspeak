@@ -44,9 +44,7 @@ class ChannelPage extends StatelessWidget {
               var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, FeedField.field1);
               var chart = new FeedChart(seriesList);
 
-              return Container(
-                margin: EdgeInsets.all(10.0),
-                height: 250.0,
+              return Center(
                 child: chart,
               );
             } else if (snapshot.hasError) {
