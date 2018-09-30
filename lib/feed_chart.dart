@@ -1,14 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:pokpak_thingspeak/enums/feed_fields.dart';
+import 'package:pokpak_thingspeak/models.dart';
+import 'package:pokpak_thingspeak/utils/parse_feed_series_list.dart';
 
 class FeedChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<Feed> feeds;
+  final FeedChannel feedChannel;
+  final FeedField feedField;
   final bool animate;
 
-  FeedChart(this.seriesList, {this.animate});
+  FeedChart(this.feeds, this.feedChannel, this.feedField, {this.animate});
 
   @override
   Widget build(BuildContext context) {
+    var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, feedField);
     var chart = new charts.TimeSeriesChart(
       seriesList,
       animate: false,
@@ -38,7 +44,7 @@ class FeedChart extends StatelessWidget {
         RotatedBox(
           quarterTurns: 3,
           child: Text(
-            "Left",
+            _getValueTitle(feedField),
             style: TextStyle(
               fontSize: 14.0,
             ),
@@ -48,7 +54,7 @@ class FeedChart extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text(
-                "Title",
+                feedChannel.name,
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -58,7 +64,7 @@ class FeedChart extends StatelessWidget {
                 child: chart,
               ),
               Text(
-                "Bottom",
+                "Date",
                 style: TextStyle(
                   fontSize: 14.0,
                 ),
@@ -68,5 +74,26 @@ class FeedChart extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _getValueTitle(FeedField feedField) {
+    switch (feedField) {
+      case FeedField.field1:
+        return feedChannel.field1;
+      case FeedField.field2:
+        return feedChannel.field2;
+      case FeedField.field3:
+        return feedChannel.field3;
+      case FeedField.field4:
+        return feedChannel.field4;
+      case FeedField.field5:
+        return feedChannel.field5;
+      case FeedField.field6:
+        return feedChannel.field6;
+      case FeedField.field7:
+        return feedChannel.field7;
+      case FeedField.field8:
+        return feedChannel.field8;
+    }
   }
 }

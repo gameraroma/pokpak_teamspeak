@@ -5,21 +5,22 @@ import 'package:pokpak_thingspeak/enums/feed_fields.dart';
 import 'package:pokpak_thingspeak/feed_chart.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:pokpak_thingspeak/utils/parse_feed_series_list.dart';
 
 class ChannelPage extends StatelessWidget {
   final Channel channel;
+  FeedChannel feedChannel;
   List<Feed> feeds = [];
 
   ChannelPage({this.channel});
 
   Future<List<Feed>> fetchFeeds() async {
     ApiKey readApiKey = channel.apiKeys.firstWhere((i) => !i.writeFlag);
-    final response = await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=${readApiKey.apiKey}&results=100');
+    final response = await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=${readApiKey.apiKey}&results=${channel.ranking}');
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON
+      feedChannel = FeedChannel.fromJson(json.decode(response.body)['channel'] as Map<String, dynamic>);
       var feeds = (json.decode(response.body)['feeds'] as List).map((i) => Feed.fromJson(i)).toList();
       return feeds;
     } else {
@@ -40,10 +41,7 @@ class ChannelPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               feeds = snapshot.data;
-              
-              var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, FeedField.field1);
-              var chart = new FeedChart(seriesList);
-
+              var chart = new FeedChart(feeds, feedChannel, FeedField.field1);
               return Center(
                 child: chart,
               );
@@ -57,4 +55,5 @@ class ChannelPage extends StatelessWidget {
       ),
     );
   }
+
 }
