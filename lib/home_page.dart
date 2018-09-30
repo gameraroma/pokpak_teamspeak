@@ -75,12 +75,6 @@ class ChannelListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var tagsText = "";
-    for (var tag in channel.tags) {
-      tagsText += tag.name + ",";
-    }
-    tagsText.trimRight();
-
     var formatter = new DateFormat('yyyy-MM-dd H:m');
     String createAtFormat = formatter.format(channel.createdAt);
 
@@ -94,7 +88,6 @@ class ChannelListItem extends StatelessWidget {
         );
       },
       title: Text(channel.name),
-      subtitle: Text(tagsText),
       trailing: Text(createAtFormat),
     );
   }
