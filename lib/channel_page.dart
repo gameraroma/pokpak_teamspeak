@@ -12,6 +12,8 @@ class ChannelPage extends StatelessWidget {
   FeedChannel feedChannel;
   List<Feed> feeds = [];
 
+  Map<String, dynamic> feedChannelJson;
+
   ChannelPage({this.channel});
 
   Future<List<Feed>> fetchFeeds() async {
@@ -20,7 +22,8 @@ class ChannelPage extends StatelessWidget {
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON
-      feedChannel = FeedChannel.fromJson(json.decode(response.body)['channel'] as Map<String, dynamic>);
+      feedChannelJson = json.decode(response.body)['channel'] as Map<String, dynamic>;
+      feedChannel = FeedChannel.fromJson(feedChannelJson);
       var feeds = (json.decode(response.body)['feeds'] as List).map((i) => Feed.fromJson(i)).toList();
       return feeds;
     } else {
@@ -41,9 +44,18 @@ class ChannelPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               feeds = snapshot.data;
-              var chart = new FeedChart(feeds, feedChannel, FeedField.field1);
-              return Center(
-                child: chart,
+
+              List<FeedField> feedFieldList = [];
+              FeedField.values.where((f) => feedChannelJson[f.toString().split('.').last] != null).forEach((f) => feedFieldList.add(f));
+
+              return ListView(
+                children: feedFieldList.map((FeedField feedField) {
+                  return FieldChartListItem(
+                      feeds: feeds,
+                      feedChannel: feedChannel,
+                      feedField: feedField
+                  );
+                }).toList(),
               );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
@@ -55,5 +67,24 @@ class ChannelPage extends StatelessWidget {
       ),
     );
   }
+}
 
+class FieldChartListItem extends StatelessWidget {
+  final List<Feed> feeds;
+  final FeedChannel feedChannel;
+  final FeedField feedField;
+
+  FieldChartListItem({this.feeds, this.feedChannel, this.feedField}) : super(key: ObjectKey(feedField));
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Card(
+        child: Container(
+          height: 250.0,
+          child: new FeedChart(feeds, feedChannel, feedField),
+        ),
+      ),
+    );
+  }
 }
