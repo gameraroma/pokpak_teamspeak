@@ -37,12 +37,14 @@ class ParseFeedSeriesList {
     var seriesList = [
       charts.Series<Feed, DateTime>(
         id: 'Clicks',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         domainFn: (Feed feed, _) => feed.createdAt,
         measureFn: (Feed feed, _) => cleanFieldValue(feed, feedField),
         data: filteredFeed,
       ),
       charts.Series<Feed, DateTime>(
         id: 'Clicks',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         domainFn: (Feed feed, _) => feed.createdAt,
         measureFn: (Feed feed, _) => cleanFieldValue(feed, feedField),
         data: filteredFeed,

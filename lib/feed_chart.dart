@@ -15,30 +15,38 @@ class FeedChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, feedField);
-    var chart = new charts.TimeSeriesChart(
-      seriesList,
-      animate: false,
-      // Configure the default renderer as a line renderer. This will be used
-      // for any series that does not define a rendererIdKey.
-      //
-      // This is the default configuration, but is shown here for  illustration.
-      defaultRenderer: new charts.LineRendererConfig(),
-      // Custom renderer configuration for the point series.
-      customSeriesRenderers: [
-        new charts.PointRendererConfig(
-          // ID used to link series to this renderer.
+    Widget chart;
+    if (seriesList.first.data.length == 0) {
+      chart = Center(
+        child: Text("No Data"),
+      );
+    }
+    else {
+      chart = new charts.TimeSeriesChart(
+        seriesList,
+        animate: false,
+        // Configure the default renderer as a line renderer. This will be used
+        // for any series that does not define a rendererIdKey.
+        //
+        // This is the default configuration, but is shown here for  illustration.
+        defaultRenderer: new charts.LineRendererConfig(),
+        // Custom renderer configuration for the point series.
+        customSeriesRenderers: [
+          new charts.PointRendererConfig(
+            // ID used to link series to this renderer.
             customRendererId: 'customPoint')
-      ],
-      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-      // should create the same type of [DateTime] as the data provided. If none
-      // specified, the default creates local date time.
-      dateTimeFactory: const charts.LocalDateTimeFactory(),
-      primaryMeasureAxis: charts.NumericAxisSpec(
+        ],
+        // Optionally pass in a [DateTimeFactory] used by the chart. The factory
+        // should create the same type of [DateTime] as the data provided. If none
+        // specified, the default creates local date time.
+        dateTimeFactory: const charts.LocalDateTimeFactory(),
+        primaryMeasureAxis: charts.NumericAxisSpec(
           tickProviderSpec: charts.BasicNumericTickProviderSpec(
               zeroBound: false
           )
-      ),
-    );
+        ),
+      );
+    }
     return Row(
       children: <Widget>[
         RotatedBox(
@@ -46,7 +54,9 @@ class FeedChart extends StatelessWidget {
           child: Text(
             _getValueTitle(feedField),
             style: TextStyle(
-              fontSize: 14.0,
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(68, 106, 148, 1.0),
             ),
           ),
         ),
@@ -67,6 +77,8 @@ class FeedChart extends StatelessWidget {
                 "Date",
                 style: TextStyle(
                   fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromRGBO(68, 106, 148, 1.0),
                 ),
               ),
             ],
