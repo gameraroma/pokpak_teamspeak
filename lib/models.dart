@@ -5,6 +5,7 @@ class Channel {
   final DateTime createdAt;
   final int lastEntryId;
   final List<Tag> tags;
+  final List<ApiKey> apiKeys;
 
   Channel({
     this.id,
@@ -12,7 +13,8 @@ class Channel {
     this.description,
     this.createdAt,
     this.lastEntryId,
-    this.tags
+    this.tags,
+    this.apiKeys
   });
 
   factory Channel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Channel {
       createdAt: DateTime.parse(json['created_at']),
       lastEntryId: json['last_entry_id'],
       tags: (json['tags'] as List).map((i) => Tag.fromJson(i)).toList(),
+      apiKeys: (json['api_keys'] as List).map((i) => ApiKey.fromJson(i)).toList(),
     );
   }
 }
@@ -51,6 +54,20 @@ class Tag {
     return Tag(
         id: parsedJson['id'],
         name: parsedJson['name'],
+    );
+  }
+}
+
+class ApiKey {
+  final String apiKey;
+  final bool writeFlag;
+
+  ApiKey({this.apiKey, this.writeFlag});
+
+  factory ApiKey.fromJson(Map<String, dynamic> parsedJson) {
+    return ApiKey(
+      apiKey: parsedJson['api_key'],
+      writeFlag: parsedJson['write_flag'],
     );
   }
 }

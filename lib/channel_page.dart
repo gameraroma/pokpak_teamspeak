@@ -15,8 +15,8 @@ class ChannelPage extends StatelessWidget {
   ChannelPage({this.channel});
 
   Future<List<Feed>> fetchFeeds() async {
-    final response =
-    await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=KJMMNNESPD923P4B&results=50');
+    ApiKey readApiKey = channel.apiKeys.firstWhere((i) => !i.writeFlag);
+    final response = await http.get('https://api.thingspeak.com/channels/${channel.id}/feeds.json?api_key=${readApiKey.apiKey}&results=100');
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON
