@@ -5,16 +5,16 @@ import 'package:pokpak_thingspeak/models.dart';
 import 'package:pokpak_thingspeak/utils/parse_feed_series_list.dart';
 
 class FeedChart extends StatelessWidget {
-  final List<Feed> feeds;
+  List<FeedFieldData> feedFieldData;
   final FeedChannel feedChannel;
   final FeedField feedField;
   final bool animate;
 
-  FeedChart(this.feeds, this.feedChannel, this.feedField, {this.animate});
+  FeedChart(this.feedFieldData, this.feedChannel, this.feedField, {this.animate});
 
   @override
   Widget build(BuildContext context) {
-    var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feeds, feedField);
+    var seriesList = ParseFeedSeriesList.parseFeedSeriesList(feedFieldData, feedField);
     Widget chart;
     if (seriesList.first.data.length == 0) {
       chart = Center(

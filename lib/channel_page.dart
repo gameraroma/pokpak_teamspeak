@@ -5,7 +5,6 @@ import 'package:pokpak_thingspeak/enums/feed_fields.dart';
 import 'package:pokpak_thingspeak/feed_chart.dart';
 import 'package:pokpak_thingspeak/models.dart';
 import 'package:http/http.dart' as http;
-import 'package:pokpak_thingspeak/utils/parse_feed_series_list.dart';
 
 class ChannelPage extends StatelessWidget {
   final Channel channel;
@@ -78,13 +77,39 @@ class FieldChartListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<FeedFieldData> feedFieldData = [];
+    for (var feed in feeds)
+    {
+      feedFieldData.add(FeedFieldData(feed.createdAt, _getValueTitle(feed, feedField)));
+    }
     return ListTile(
       title: Card(
         child: Container(
           height: 250.0,
-          child: new FeedChart(feeds, feedChannel, feedField),
+          child: new FeedChart(feedFieldData, feedChannel, feedField),
         ),
       ),
     );
+  }
+
+  String _getValueTitle(Feed feed,FeedField feedField) {
+    switch (feedField) {
+      case FeedField.field1:
+        return feed.field1;
+      case FeedField.field2:
+        return feed.field2;
+      case FeedField.field3:
+        return feed.field3;
+      case FeedField.field4:
+        return feed.field4;
+      case FeedField.field5:
+        return feed.field5;
+      case FeedField.field6:
+        return feed.field6;
+      case FeedField.field7:
+        return feed.field7;
+      case FeedField.field8:
+        return feed.field8;
+    }
   }
 }

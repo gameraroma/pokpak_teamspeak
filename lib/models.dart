@@ -166,3 +166,10 @@ class Feed {
     );
   }
 }
+
+class FeedFieldData {
+  final DateTime createdAt;
+  final String value;
+
+  FeedFieldData(this.createdAt, this.value);
+}
